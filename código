@@ -1,0 +1,101 @@
+class ContaBancaria:
+    def __init__(self, titular, saldo=0):
+        self.titular = titular
+        self.saldo = saldo
+
+    def depositar(self, valor):
+        if valor > 0:
+            self.saldo += valor
+            print(f"Depósito de R${valor} realizado com sucesso.")
+            return True
+        else:
+            print("Valor inválido para depósito.")
+            return False
+
+    def sacar(self, valor):
+        if valor > 0 and valor <= self.saldo:
+            self.saldo -= valor
+            print(f"Saque de R${valor} realizado com sucesso.")
+            return True
+        else:
+            print("Saldo insuficiente ou valor inválido para saque.")
+            return False
+
+    def consultar_saldo(self):
+        print(f"Saldo atual: R${self.saldo}")
+
+
+# Função para exibir o menu de opções
+def exibir_menu():
+    print("\n=== Menu ===")
+    print("1. Sacar")
+    print("2. Depositar")
+    print("3. Consultar Saldo")
+    print("4. Finalizar")
+
+
+# Função para verificar se o usuário deseja continuar
+def verificar_continuar(resposta):
+    opcoes_sim = ["s", "sim"]
+    return resposta.lower() in opcoes_sim
+
+
+# Função para realizar o login
+def realizar_login():
+    usuario = input("Digite o nome de usuário: ")
+    senha = input("Digite a senha: ")
+    if usuario == "Igor Matheus" and senha == "1605":
+        print("Seja bem-vindo,", usuario)
+        return usuario
+    else:
+        print("Usuário ou senha incorretos.")
+        criar_conta = input("Deseja criar uma conta? (s/n): ")
+        if criar_conta.lower() == "s":
+            usuario = input("Digite o nome de usuário (máximo 6 letras): ")
+            senha = input("Digite a senha (máximo 6 letras): ")
+            if len(usuario) <= 6 and len(senha) <= 6:
+                print("Conta criada com sucesso!")
+                return usuario
+            else:
+                print("O nome de usuário e a senha devem ter no máximo 6 letras.")
+                return None
+        else:
+            return None
+
+
+# Exemplo de utilização
+if __name__ == "__main__":
+    # Realizando o login
+    usuario_atual = realizar_login()
+    if usuario_atual is None:
+        print("Acesso negado.")
+    else:
+        # Criando uma nova conta bancária
+        conta1 = ContaBancaria(usuario_atual)
+
+        continuar = True
+
+        while continuar:
+            exibir_menu()
+            opcao = input("Escolha uma opção: ")
+
+            if opcao == "1":
+                valor_saque = float(input("Digite o valor que deseja sacar: "))
+                if conta1.sacar(valor_saque):
+                    conta1.consultar_saldo()
+            elif opcao == "2":
+                valor_deposito = float(input("Digite o valor que deseja depositar: "))
+                if conta1.depositar(valor_deposito):
+                    conta1.consultar_saldo()
+            elif opcao == "3":
+                conta1.consultar_saldo()
+            elif opcao == "4":
+                print("Finalizando...")
+                continuar = False
+            else:
+                print("Opção inválida. Tente novamente.")
+
+            if continuar:
+                resposta = input("Deseja continuar? (s/n): ")
+                if not verificar_continuar(resposta):
+                    continuar = False
